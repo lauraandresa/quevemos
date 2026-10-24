@@ -207,6 +207,7 @@
         '<div class="ticket-meta">' + esc(o.meta) + '</div>' +
         (o.badges ? '<div class="badge-row">' + o.badges + '</div>' : '') +
         (o.synopsis ? '<p class="ticket-synopsis">' + esc(o.synopsis) + '</p>' : '') +
+        (o.synopsis && o.synopsis.length > 110 ? '<button class="ticket-more" data-act="more">Leer sinopsis completa ▾</button>' : '') +
         '<div class="ticket-actions">' + o.actions + '</div>' +
       '</div><span class="ticket-notch-bottom"></span>';
   }
@@ -234,7 +235,13 @@
         badges: badges + reason, synopsis: d.overview,
         actions: '<button class="ticket-cta">Esta, la vemos</button>'
       });
-      el.querySelector('.ticket-cta').addEventListener('click', function () { choose(d); });
+      el.querySelector('.ticket-cta').addEventListener('click', function (e) { e.stopPropagation(); choose(d); });
+      const more = el.querySelector('[data-act="more"]');
+      const toggle = function () {
+        const open = el.classList.toggle('is-open');
+        if (more) more.textContent = open ? 'Ocultar sinopsis ▴' : 'Leer sinopsis completa ▾';
+      };
+      if (more) { el.classList.add('is-tappable'); el.addEventListener('click', toggle); }
       list.appendChild(el);
     });
   }
@@ -332,21 +339,37 @@
     Object.keys(w).forEach(function (c) {
       QV.TAGS.forEach(function (t) {
         const v = w[c][t.id];
-        if (v && v >= QV.W_ACTIVE) pills.push(genreName(c) + ' · ' + t.label + ' (+' + v.toFixed(1) + ')');
+        if (v && v >= QV.W_ACTIVE) pills.push({ ctx: c, tag: t, text: genreName(c) + ' · ' + t.label });
       });
     });
-    if (!pills.length) { box.innerHTML = '<span class="muted small">Todavía no hay nada aprendido.</span>'; return; }
-    pills.forEach(function (txt) {
+    if (!pills.length) { box.innerHTML = '<span class="muted small">Todavía no hay nada aprendido.</span>'; }
+    pills.forEach(function (p) {
       const s = document.createElement('span');
-      s.className = 'weight-pill'; s.textContent = txt;
+      s.className = 'weight-pill';
+      const txt = document.createElement('span');
+      txt.textContent = p.text;
+      const x = document.createElement('button');
+      x.className = 'pill-x'; x.textContent = '×';
+      x.setAttribute('aria-label', 'Quitar ' + p.text);
+      x.addEventListener('click', function () { Weights.remove(p.ctx, p.tag.id); renderWeights(); });
+      s.appendChild(txt); s.appendChild(x);
       box.appendChild(s);
     });
+  }
+
+  function renderAddTaste() {
+    const g = $('#add-taste-genre'), t = $('#add-taste-tag');
+    g.innerHTML = '<option value="_any">Cualquier temática</option>' +
+      state.genreList.map(function (x) { return '<option value="' + x.id + '">' + esc(x.name) + '</option>'; }).join('');
+    t.innerHTML = QV.TAGS.map(function (x) { return '<option value="' + x.id + '">' + esc(x.label) + '</option>'; }).join('');
   }
 
   async function renderSettings() {
     const inp = $('#input-api-key-settings');
     inp.value = '';
     inp.placeholder = Store.get('apiKey', '') ? '•••••••• (guardada; escribe para cambiarla)' : 'Pega aquí tu clave';
+    if (!state.genreList.length) { try { state.genreList = (await TMDB.genres()).filter(function (x) { return x.id !== 10770; }); } catch (e) {} }
+    renderAddTaste();
     renderWeights();
     const box = $('#platform-list');
     box.innerHTML = '<p class="muted small">Cargando plataformas…</p>';
@@ -424,6 +447,10 @@
     $('#btn-rate-notags').addEventListener('click', function () { saveRating(true); });
     $('#btn-rate-cancel').addEventListener('click', function () { $('#modal-rate').hidden = true; });
 
+    $('#btn-add-taste').addEventListener('click', function () {
+      Weights.setWeight($('#add-taste-genre').value, $('#add-taste-tag').value, QV.MANUAL_WEIGHT);
+      renderWeights(); toast('Gusto añadido');
+    });
     $('#btn-reset-weights').addEventListener('click', function () {
       if (confirm('¿Borrar todo lo aprendido de vuestros gustos? Las valoraciones pasadas se conservan, pero dejan de influir.')) {
         Weights.reset(); renderWeights(); toast('Gustos reiniciados');

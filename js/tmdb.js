@@ -75,6 +75,7 @@ const TMDB = {
       with_watch_providers: o.providerIds.join('|'),
       with_watch_monetization_types: 'flatrate',
       with_genres: (o.genreIds || []).join('|'),            // "|" = cualquiera de ellas
+      without_genres: (o.genreIds || []).indexOf(QV.ANIMATION_GENRE) === -1 ? QV.ANIMATION_GENRE : '',  // animación solo si la pedís
       'with_runtime.gte': QV.MIN_RUNTIME,
       'with_runtime.lte': o.maxRuntime < 9999 ? o.maxRuntime : '',
       'vote_count.gte': o.minVotes,

@@ -31,7 +31,8 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
 ## Cómo funciona
 
 - **Formulario:** duración máxima + temáticas (puedes elegir varias; sin elegir = cualquiera). Las plataformas están en Ajustes.
-- **5 propuestas** que cumplen los filtros duros: en streaming por suscripción en *vuestras* plataformas (España), dentro de la duración y la temática.
+- **5 propuestas** que cumplen los filtros duros: en streaming por suscripción en *vuestras* plataformas (España), dentro de la duración y la temática. Las de **animación solo salen si elegís la temática Animación**.
+- **Sinopsis:** toca la tarjeta (o "Leer sinopsis completa") para desplegarla entera.
 - **"Otras 5"** nunca repite lo ya mostrado en la sesión, ni lo ya elegido o puntuado.
 - **Elegir → puntuar:** "Esta, la vemos" la guarda en *Pendientes*. Cuando la terminéis, la puntuáis de 1 a 5★ y, si queréis, con hasta 2 motivos.
 - **Aprendizaje (no es machine learning, son pesos con tope):**
@@ -40,6 +41,7 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
   - Tope: **máximo 2 de las 5 propuestas** pueden venir empujadas por vuestros gustos, y **mínimo 3 son "algo distinto"**.
   - Cada 5 días de uso, los pesos pierden un 10% para que el perfil no se fosilice.
   - El peso de cada motivo tiene tope (+5) por mucho que lo repitáis.
+  - En **Ajustes → Gustos aprendidos** podéis quitar cualquier gusto con la × y añadir uno a mano (temática + etiqueta). Un gusto añadido a mano arranca con peso +2, y sigue sujeto al mismo tope de 2 de 5.
 
 ## Limitaciones conocidas
 

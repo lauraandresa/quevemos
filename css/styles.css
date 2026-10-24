@@ -121,6 +121,12 @@ p { margin: 0 0 10px; }
   font-size: 13.5px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px;
   display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
+.ticket.is-tappable { cursor: pointer; }
+.ticket.is-open .ticket-synopsis { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.ticket-more {
+  background: none; border: none; padding: 0 0 10px; color: var(--amber);
+  font-family: var(--font-body); font-size: 12.5px; font-weight: 600; text-align: left; display: block;
+}
 .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--text-muted); }
 .badge--explore { background: var(--coral-dim); color: var(--coral); }
@@ -152,7 +158,20 @@ p { margin: 0 0 10px; }
   padding: 12px 14px; border-radius: 10px; font-family: var(--font-body); font-size: 14px;
 }
 .weights-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.weight-pill { font-size: 12px; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); color: var(--text-muted); }
+.weight-pill {
+  font-size: 12px; padding: 6px 6px 6px 12px; border-radius: 999px;
+  background: var(--surface-2); color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.pill-x {
+  background: var(--line); color: var(--text); border: none; width: 22px; height: 22px;
+  border-radius: 50%; font-size: 15px; line-height: 1; padding: 0;
+}
+.add-taste { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.add-taste select {
+  width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text);
+  padding: 12px 14px; border-radius: 10px; font-family: var(--font-body); font-size: 14px;
+}
 
 /* Modales */
 .modal-backdrop {

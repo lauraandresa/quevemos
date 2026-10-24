@@ -75,6 +75,21 @@ const Weights = {
     Store.set('sessionMeta', meta);
   },
 
+  // Edición manual, etiqueta a etiqueta
+  setWeight(ctx, tagId, value) {
+    const w = this.all();
+    w[ctx] = w[ctx] || {};
+    w[ctx][tagId] = qvClamp(value, QV.W_MIN, QV.W_MAX);
+    Store.set('weights', w);
+  },
+  remove(ctx, tagId) {
+    const w = this.all();
+    if (!w[ctx]) return;
+    delete w[ctx][tagId];
+    if (!Object.keys(w[ctx]).length) delete w[ctx];
+    Store.set('weights', w);
+  },
+
   reset() { Store.remove('weights'); }
 };
 

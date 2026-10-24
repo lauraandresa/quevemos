@@ -7,6 +7,7 @@ const QV = {
   LOGO_BASE: 'https://image.tmdb.org/t/p/w92',
 
   // Filtros duros
+  ANIMATION_GENRE: 16,      // solo sale si elegís "Animación"
   MIN_RUNTIME: 40,          // descarta cortos
   MIN_VOTES: 150,           // descarta películas casi desconocidas
   MIN_VOTES_RELAXED: 20,    // si no sale nada, se relaja una vez
@@ -24,6 +25,7 @@ const QV = {
   DECAY_EVERY: 5,           // cada 5 días de uso distintos...
   DECAY_FACTOR: 0.9,        // ...los pesos pierden un 10%
   MAX_TAGS_PER_RATING: 2,
+  MANUAL_WEIGHT: 2,         // peso que se da a un gusto añadido a mano
 
   // Etiquetas de "por qué". kw = búsquedas en palabras clave de TMDB (en inglés).
   // Solo se usan las que coinciden EXACTAMENTE con el nombre de una keyword real.
