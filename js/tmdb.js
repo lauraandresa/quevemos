@@ -1,5 +1,6 @@
 /* Cliente mínimo de la API v3 de TMDB. */
 const TMDB = {
+  VERSION: 4,
   async request(path, params) {
     const key = Store.get('apiKey', '');
     if (!key) throw new Error('NO_KEY');
@@ -35,13 +36,21 @@ const TMDB = {
     });
   },
 
+  // Plataformas de películas + series (unidas, sin repetir)
   providers() {
-    return this.cached('cacheProviders', 14, async () => {
-      const d = await this.request('/watch/providers/movie', { watch_region: QV.REGION, language: QV.LANGUAGE });
-      return (d.results || []).map(function (p) {
+    return this.cached('cacheProviders2', 14, async () => {
+      const get = (t) => this.request('/watch/providers/' + t, { watch_region: QV.REGION, language: QV.LANGUAGE });
+      const d = await get('movie');
+      let tv = { results: [] };
+      try { tv = await get('tv'); } catch (e) { if (e.message === 'BAD_KEY' || e.message === 'NETWORK') throw e; }
+      const byId = {};
+      (d.results || []).concat(tv.results || []).forEach(function (p) {
         const prio = p.display_priorities && p.display_priorities[QV.REGION];
-        return { id: p.provider_id, name: p.provider_name, logo: p.logo_path, prio: prio === undefined ? 999 : prio };
-      }).sort(function (a, b) { return a.prio - b.prio; }).slice(0, 40);
+        const cur = { id: p.provider_id, name: p.provider_name, logo: p.logo_path, prio: prio === undefined ? 999 : prio };
+        if (!byId[cur.id] || cur.prio < byId[cur.id].prio) byId[cur.id] = cur;
+      });
+      return Object.keys(byId).map(function (k) { return byId[k]; })
+        .sort(function (a, b) { return a.prio - b.prio; }).slice(0, 40);
     });
   },
 
@@ -66,32 +75,37 @@ const TMDB = {
     return ids;
   },
 
-  // Películas en streaming (suscripción) en vuestras plataformas, dentro de la duración y temáticas pedidas.
+  // Películas o series (o.type) en streaming por suscripción en vuestras plataformas.
+  // En series, la duración filtra por la de cada capítulo.
   discover(o) {
-    return this.request('/discover/movie', {
+    const isTv = o.type === 'tv';
+    return this.request('/discover/' + (isTv ? 'tv' : 'movie'), {
       language: QV.LANGUAGE,
-      region: QV.REGION,
+      region: isTv ? '' : QV.REGION,
       watch_region: QV.REGION,
       with_watch_providers: o.providerIds.join('|'),
       with_watch_monetization_types: 'flatrate',
       with_genres: (o.genreIds || []).join('|'),            // "|" = cualquiera de ellas
       without_genres: (o.genreIds || []).indexOf(QV.ANIMATION_GENRE) === -1 ? QV.ANIMATION_GENRE : '',  // animación solo si la pedís
-      'with_runtime.gte': QV.MIN_RUNTIME,
+      'with_runtime.gte': isTv ? QV.MIN_RUNTIME_TV : QV.MIN_RUNTIME,
       'with_runtime.lte': o.maxRuntime < 9999 ? o.maxRuntime : '',
+      'primary_release_date.gte': (!isTv && o.minYear) ? o.minYear + '-01-01' : '',
+      'first_air_date.gte': (isTv && o.minYear) ? o.minYear + '-01-01' : '',   // en series: año del primer episodio
       'vote_count.gte': o.minVotes,
       with_keywords: (o.keywordIds || []).join('|'),
       sort_by: 'popularity.desc',
-      include_adult: 'false',
+      include_adult: isTv ? '' : 'false',
       page: o.page || 1
     });
   },
 
-  // Detalle: duración exacta, géneros y plataformas, en una sola llamada.
-  async details(id) {
-    let d = await this.request('/movie/' + id, { language: QV.LANGUAGE, append_to_response: 'watch/providers' });
+  // Detalle de película o serie: duración, géneros y plataformas en una sola llamada.
+  async details(type, id) {
+    const path = '/' + (type === 'tv' ? 'tv' : 'movie') + '/' + id;
+    const d = await this.request(path, { language: QV.LANGUAGE, append_to_response: 'watch/providers' });
     if (!d.overview) {
       try {
-        const en = await this.request('/movie/' + id, { language: 'en-US' });
+        const en = await this.request(path, { language: 'en-US' });
         d.overview = en.overview || '';
       } catch (e) {}
     }

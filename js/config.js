@@ -1,5 +1,6 @@
 /* Constantes de la app. Aquí NO hay ninguna clave: la API key la mete el usuario en la app. */
 const QV = {
+  VERSION: 4,               // si cambias esto, cambia también index.html y los demás sellos
   REGION: 'ES',
   LANGUAGE: 'es-ES',
   API_BASE: 'https://api.themoviedb.org/3',
@@ -8,6 +9,24 @@ const QV = {
 
   // Filtros duros
   ANIMATION_GENRE: 16,      // solo sale si elegís "Animación"
+  MIN_RUNTIME_TV: 15,       // en series la duración es la de cada capítulo
+
+  // Las temáticas del formulario son géneros de PELÍCULA. Equivalencia con los géneros de SERIE de TMDB.
+  // [] = esa temática no existe en series (terror, romance, música, historia).
+  MOVIE_TO_TV: {
+    28: [10759], 12: [10759], 16: [16], 35: [35], 80: [80], 99: [99], 18: [18], 10751: [10751],
+    14: [10765], 878: [10765], 36: [], 27: [], 10402: [], 9648: [9648], 10749: [], 53: [9648],
+    10752: [10768], 37: [37]
+  },
+  // Al revés, para que los gustos aprendidos de una serie cuenten en la temática equivalente de película.
+  TV_TO_MOVIE: {
+    10759: [28, 12], 16: [16], 35: [35], 80: [80], 99: [99], 18: [18], 10751: [10751],
+    10765: [14, 878], 9648: [9648, 53], 10768: [10752], 37: [37]
+  },
+  // Géneros de serie que no son "algo para ver en pareja": noticias, reality, culebrones, tertulias.
+  TV_EXCLUDED_GENRES: [10763, 10764, 10766, 10767],
+  KIDS_GENRE: 10762,        // series infantiles: solo si elegís Familia
+  FAMILY_GENRE: 10751,
   MIN_RUNTIME: 40,          // descarta cortos
   MIN_VOTES: 150,           // descarta películas casi desconocidas
   MIN_VOTES_RELAXED: 20,    // si no sale nada, se relaja una vez

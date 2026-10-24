@@ -1,4 +1,5 @@
 :root {
+  --qv-version: 4;
   --bg: #121A1F;
   --surface: #1A2429;
   --surface-2: #202C32;
@@ -73,6 +74,8 @@ p { margin: 0 0 10px; }
   font-family: var(--font-body); font-size: 14px; font-weight: 500; white-space: nowrap;
 }
 .chip.is-active { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+.chip.is-dim { opacity: 0.4; }
+#media-hint { margin-top: 8px; }
 
 /* Buttons */
 .btn {
@@ -130,6 +133,7 @@ p { margin: 0 0 10px; }
 .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); color: var(--text-muted); }
 .badge--explore { background: var(--coral-dim); color: var(--coral); }
+.badge--type { background: var(--line); color: var(--text); }
 .badge--match { background: var(--amber-dim); color: var(--amber); }
 .ticket-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .ticket-cta {

@@ -11,6 +11,7 @@ function qvShuffle(arr) {
 function qvClamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 const Weights = {
+  VERSION: 4,
   all() { return Store.get('weights', {}); },
 
   // Los gustos se guardan POR TEMÁTICA: "giro final" en misterio no empuja en comedia.
@@ -96,10 +97,10 @@ const Weights = {
 const Picker = {
   // Reparte las propuestas: mínimo EXPLORE_MIN sin boost, máximo MAX_BOOSTED con boost de gustos.
   pick(general, boosted, excluded, n) {
-    const ok = function (m) { return !excluded.has(m.id); };
+    const ok = function (m) { return !excluded.has(m._key); };
     const B = qvShuffle(boosted.filter(ok));
-    const bIds = new Set(boosted.map(function (m) { return m.id; }));
-    const G = qvShuffle(general.filter(function (m) { return ok(m) && !bIds.has(m.id); }));
+    const bIds = new Set(boosted.map(function (m) { return m._key; }));
+    const G = qvShuffle(general.filter(function (m) { return ok(m) && !bIds.has(m._key); }));
     const out = [];
 
     const exploreN = Math.min(QV.EXPLORE_MIN, G.length);

@@ -31,6 +31,7 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
 ## Cómo funciona
 
 - **Formulario:** duración máxima, formato (película, serie o lo que sea) y temáticas (puedes elegir varias; sin elegir = cualquiera). Las plataformas están en Ajustes.
+- **Año mínimo de estreno:** en Ajustes podéis poner, por ejemplo, 2000 para que no salga nada anterior (vacío = sin límite). Se aplica a películas y series, y se puede cambiar cuando queráis.
 - **Series:** en series la duración es la de **cada capítulo** ("< 1 h" = capítulos de menos de una hora). Los gustos aprendidos valen para películas y series. Se descartan automáticamente noticias, reality, culebrones, tertulias y series infantiles (salvo que elijáis Familia).
 - **5 propuestas** que cumplen los filtros duros: en streaming por suscripción en *vuestras* plataformas (España), dentro de la duración y la temática. Las de **animación solo salen si elegís la temática Animación**.
 - **Sinopsis:** toca la tarjeta (o "Leer sinopsis completa") para desplegarla entera.
@@ -57,3 +58,9 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
 ## Créditos
 
 Esta app usa la API de TMDB pero no está respaldada ni certificada por TMDB. Los datos de disponibilidad por plataforma los aporta JustWatch.
+
+## Si algo no funciona tras actualizar
+
+La app se compone de varios archivos que **tienen que estar en sus carpetas**: `index.html`, `service-worker.js` y `manifest.json` en la raíz; `css/styles.css`; y `js/app.js`, `js/config.js`, `js/storage.js`, `js/tmdb.js`, `js/scoring.js`. Si subes un archivo de `js/` a la raíz del repo, la app sigue usando la copia vieja de `js/` y los botones nuevos no hacen nada.
+
+Para evitarlo, la app comprueba al abrirse que todos sus archivos son de la misma versión. Si no lo son, muestra una franja roja abajo con el nombre del archivo desactualizado. Si la ves: súbelo a su carpeta correcta, borra los duplicados sueltos de la raíz y recarga (en el móvil, cierra la app del todo y ábrela otra vez).
