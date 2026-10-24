@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121A1F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="¿Qué vemos?">
+  <title>¿Qué vemos?</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="icon-btn" id="btn-back" hidden aria-label="Volver">‹</button>
+    <h1 class="brand">¿Qué vemos?</h1>
+    <button class="icon-btn" id="btn-settings" aria-label="Ajustes">⚙</button>
+  </header>
+
+  <main id="app">
+
+    <!-- ONBOARDING -->
+    <section id="screen-onboarding" class="screen" hidden>
+      <div class="panel">
+        <p class="eyebrow">Antes de empezar</p>
+        <h2>Pega tu clave de TMDB</h2>
+        <p class="muted">La app usa The Movie Database (gratis) para saber qué hay en cada plataforma. La clave se guarda solo en este móvil: no está en el código ni en GitHub.</p>
+        <label class="field">
+          <span>API Key (v3) o Access Token</span>
+          <input type="password" id="input-api-key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Pega aquí tu clave">
+        </label>
+        <button class="btn btn--primary" id="btn-save-key">Guardar y continuar</button>
+        <p class="error-msg" id="key-error" hidden></p>
+      </div>
+    </section>
+
+    <!-- FORMULARIO -->
+    <section id="screen-form" class="screen" hidden>
+      <div class="hero">
+        <p class="eyebrow">Sesión de esta noche</p>
+        <h2 class="hero-title">¿Cuánto tiempo<br>tenéis?</h2>
+      </div>
+
+      <div class="chip-row" id="duration-chips">
+        <button class="chip" data-duration="60">&lt; 1 h</button>
+        <button class="chip" data-duration="90">&lt; 1h 30</button>
+        <button class="chip" data-duration="120">&lt; 2 h</button>
+        <button class="chip" data-duration="150">&lt; 2h 30</button>
+        <button class="chip" data-duration="9999">Sin límite</button>
+      </div>
+
+      <h3 class="section-label">¿Qué os apetece? <span class="muted small">(sin elegir = cualquiera)</span></h3>
+      <div class="chip-row chip-row--wrap" id="genre-chips"></div>
+
+      <div id="pending-widget" class="pending-widget" hidden>
+        <button class="link-btn" id="btn-view-pending"></button>
+      </div>
+
+      <button class="btn btn--primary btn--large" id="btn-search">Proponednos algo</button>
+      <p class="error-msg" id="form-error" hidden></p>
+    </section>
+
+    <!-- RESULTADOS -->
+    <section id="screen-results" class="screen" hidden>
+      <p class="eyebrow">Propuestas para hoy</p>
+      <div class="results-list" id="results-list"></div>
+      <div class="results-actions" id="results-actions" hidden>
+        <button class="btn btn--ghost btn--block" id="btn-reroll">🔄 No nos convence, otras 5</button>
+        <button class="link-btn" id="btn-new-search">Empezar de nuevo</button>
+      </div>
+    </section>
+
+    <!-- PENDIENTES -->
+    <section id="screen-pending" class="screen" hidden>
+      <p class="eyebrow">Pendientes de puntuar</p>
+      <div class="results-list" id="pending-list"></div>
+      <p class="muted" id="pending-empty" hidden>No tenéis nada pendiente de puntuar.</p>
+    </section>
+
+    <!-- AJUSTES -->
+    <section id="screen-settings" class="screen" hidden>
+      <p class="eyebrow">Ajustes</p>
+
+      <h3 class="section-label">Vuestras plataformas</h3>
+      <p class="muted small">Solo se propondrán títulos incluidos en las que marquéis.</p>
+      <div class="platform-list" id="platform-list"></div>
+
+      <h3 class="section-label">Gustos aprendidos</h3>
+      <p class="muted small">Se construyen solos con vuestras valoraciones (4-5★ suman, siempre con tope).</p>
+      <div id="weights-preview" class="weights-preview"></div>
+      <button class="btn btn--ghost btn--danger" id="btn-reset-weights">Reiniciar gustos aprendidos</button>
+
+      <h3 class="section-label">Clave de TMDB</h3>
+      <label class="field">
+        <input type="password" id="input-api-key-settings" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </label>
+      <button class="btn btn--secondary" id="btn-save-key-settings">Actualizar clave</button>
+
+      <button class="btn btn--primary btn--large" id="btn-settings-done">Listo</button>
+    </section>
+
+  </main>
+
+  <!-- MODAL: elegida -->
+  <div class="modal-backdrop" id="modal-chosen" hidden>
+    <div class="modal">
+      <p class="eyebrow">Buena elección</p>
+      <h3 id="chosen-title"></h3>
+      <p class="muted">Cuando la terminéis, puntuadla desde "Pendientes de puntuar" en la pantalla principal.</p>
+      <button class="btn btn--primary btn--block" id="btn-chosen-ok">Vale, ¡a disfrutar!</button>
+    </div>
+  </div>
+
+  <!-- MODAL: puntuar -->
+  <div class="modal-backdrop" id="modal-rate" hidden>
+    <div class="modal">
+      <p class="eyebrow">¿Qué tal estuvo?</p>
+      <h3 id="rate-title"></h3>
+      <div class="stars" id="rate-stars">
+        <button class="star" data-value="1" aria-label="1 estrella">★</button>
+        <button class="star" data-value="2" aria-label="2 estrellas">★</button>
+        <button class="star" data-value="3" aria-label="3 estrellas">★</button>
+        <button class="star" data-value="4" aria-label="4 estrellas">★</button>
+        <button class="star" data-value="5" aria-label="5 estrellas">★</button>
+      </div>
+      <p class="muted small">¿Por qué? Elegid hasta 2 (opcional)</p>
+      <div class="chip-row chip-row--wrap" id="rate-tags"></div>
+      <button class="btn btn--primary btn--block" id="btn-rate-save">Guardar valoración</button>
+      <button class="link-btn" id="btn-rate-notags">Puntuar sin decir por qué</button>
+      <button class="link-btn" id="btn-rate-cancel">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <p class="attribution">Esta app usa la API de TMDB pero no está respaldada ni certificada por TMDB.</p>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/tmdb.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('service-worker.js').catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>

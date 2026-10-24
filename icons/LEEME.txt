@@ -1,0 +1,1 @@
+Pon aquí icon-192.png y icon-512.png (PNG cuadrados, 192x192 y 512x512 px).
