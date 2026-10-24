@@ -30,7 +30,8 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
 
 ## Cómo funciona
 
-- **Formulario:** duración máxima + temáticas (puedes elegir varias; sin elegir = cualquiera). Las plataformas están en Ajustes.
+- **Formulario:** duración máxima, formato (película, serie o lo que sea) y temáticas (puedes elegir varias; sin elegir = cualquiera). Las plataformas están en Ajustes.
+- **Series:** en series la duración es la de **cada capítulo** ("< 1 h" = capítulos de menos de una hora). Los gustos aprendidos valen para películas y series. Se descartan automáticamente noticias, reality, culebrones, tertulias y series infantiles (salvo que elijáis Familia).
 - **5 propuestas** que cumplen los filtros duros: en streaming por suscripción en *vuestras* plataformas (España), dentro de la duración y la temática. Las de **animación solo salen si elegís la temática Animación**.
 - **Sinopsis:** toca la tarjeta (o "Leer sinopsis completa") para desplegarla entera.
 - **"Otras 5"** nunca repite lo ya mostrado en la sesión, ni lo ya elegido o puntuado.
@@ -46,7 +47,9 @@ Recomendador de películas para decidir en un minuto qué ver esta noche. Funcio
 ## Limitaciones conocidas
 
 - Los datos de plataformas vienen de JustWatch a través de TMDB: pueden ir con retraso y alguna película puede haber salido ya del catálogo.
-- Películas de menos de 1 h hay muy pocas; con "< 1 h" saldrán pocas propuestas. Para eso están las series (pendiente).
+- Películas de menos de 1 h hay muy pocas; con "< 1 h" y formato película saldrán pocas propuestas. Para eso están las series.
+- En series **no existen** las temáticas Terror, Romance, Música ni Historia (TMDB no las tiene para series): salen apagadas al elegir "Serie". Con "Lo que sea" esas temáticas solo traen películas.
+- Las temáticas de series son equivalencias: Acción y Aventura → Acción/Aventura; Ciencia ficción y Fantasía → Fantasía/Ciencia ficción; Suspense → Misterio.
 - Los datos (clave, valoraciones, gustos) están **en cada dispositivo**: no se sincronizan entre vuestros móviles.
 - Los motivos que restan (1-2★) se guardan pero de momento no se usan para descartar nada.
 - Los motivos ("giro final", etc.) se buscan en las palabras clave de TMDB, que son colaborativas y no cubren todas las películas. Si un motivo no se encuentra, simplemente no empuja.

@@ -1,6 +1,6 @@
 /* Network-first: si hay internet siempre carga la última versión (así las actualizaciones
    que subas a GitHub llegan solas); si no hay, usa la copia guardada. */
-const CACHE = 'que-vemos-v2';
+const CACHE = 'que-vemos-v3';
 const SHELL = ['./', 'index.html', 'css/styles.css', 'js/config.js', 'js/storage.js', 'js/tmdb.js', 'js/scoring.js', 'js/app.js', 'manifest.json'];
 
 self.addEventListener('install', function (e) {
